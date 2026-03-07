@@ -1,0 +1,46 @@
+# v0 runtime files (should only exist in preview, not in git)
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+instrumentation-client.js
+instrumentation-client.ts
+
+# Common ignores
+node_modules/
+.next/
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+.env*
+
+# Python / Backend ignores
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+*.db
+*.sqlite3
+
+# Keys and Secrets
+backend/service-account.json
+service-account.json
+*.pem
+*.key
+*.p12
+
+# OS / Editor ignores
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
