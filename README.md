@@ -1,7 +1,7 @@
 # Virtual Try-On Kiosk
 
 ## Overview
-Virtual Try-On Kiosk is a portrait-first retail experience built with Next.js and FastAPI. The kiosk guides a user through capture, preference selection, recommendations, and a final try-on preview. An admin portal manages the clothing catalog, while the backend stores garments in SQLite-backed records and orchestrates ComfyUI-based cloth swapping with the selected garment and user photo.
+Virtual Try-On Kiosk is a portrait-first retail experience built with Next.js and FastAPI. The kiosk guides a user through capture, preference selection, recommendations, and a final try-on preview. An admin portal manages the clothing catalog, while the backend stores garments in SQLite-backed records and orchestrates a ComfyUI-powered FLUX.2 Klein cloth-swap pipeline using the selected garment and user photo.
 
 ## Features
 
@@ -10,8 +10,18 @@ Virtual Try-On Kiosk is a portrait-first retail experience built with Next.js an
 - Clothing recommendations filtered by occasion, style, gender, and category.
 - Admin portal for creating, editing, and deleting catalog items.
 - Local garment image storage for fast retrieval during try-on generation.
-- ComfyUI-backed try-on pipeline using the selected garment and webcam photo.
+- ComfyUI-backed FLUX.2 Klein try-on pipeline using the selected garment and webcam photo.
 - Session-oriented UX with cleanup designed for public kiosk use.
+
+## ML / Try-On Pipeline
+
+The try-on flow uses ComfyUI as the image generation engine and FLUX.2 Klein as the cloth-swapping model.
+
+1. The kiosk captures a user photo and sends it to the FastAPI backend.
+2. The backend loads the selected garment from SQLite and local storage.
+3. The backend uploads both images to the remote ComfyUI server.
+4. ComfyUI runs the FLUX.2 Klein workflow and produces the try-on result.
+5. The backend returns the generated image to the frontend as base64.
 
 ## 📸 Snapshots
 
@@ -46,7 +56,7 @@ Virtual Try-On Kiosk is a portrait-first retail experience built with Next.js an
 - **Language**: Python 3.10+
 - **Database**: SQLite (via `aiosqlite`)
 - **ORM**: SQLAlchemy
-- **AI/ML**: Google GenAI SDK
+- **AI/ML**: ComfyUI with FLUX.2 Klein cloth swapping
 - **Task Runner**: Uvicorn
 
 ## 📂 Project Structure
