@@ -16,45 +16,14 @@ export interface Outfit {
     occasion: string;
     style: string;
     gender: string;
-    garment_image: string;  // For try-on
-    preview_image: string;  // For UI display (renamed from 'image')
+    garment_image: string;  // For try-on (fed to ComfyUI)
+    preview_image: string;  // For UI display
     description: string | null;
     price: string | null;
     created_at?: string;
     updated_at?: string;
     // Alias for backward compatibility
     image?: string;
-}
-
-/**
- * Try-on request payload.
- */
-export interface TryOnRequest {
-    person_image: string;
-    garment_image: string;
-    session_id?: string;
-    // Optional clothing metadata for dynamic prompt injection
-    clothing_name?: string;
-    clothing_category?: string;
-    clothing_style?: string;
-    gender_target?: string;
-}
-
-/**
- * Try-on response from the API.
- */
-export interface TryOnResponse {
-    success: boolean;
-    tryon_result_image: string | null;
-    error: string | null;
-    processing_time_ms: number | null;
-}
-
-/**
- * Gender detection response from the vision API.
- */
-export interface GenderDetectResponse {
-    detected_gender: "Male" | "Female" | "Unisex";
 }
 
 /**
@@ -86,18 +55,20 @@ export function getImageUrl(path: string | null | undefined): string {
 }
 
 /**
- * Fetch clothing recommendations based on occasion and style.
+ * Fetch clothing recommendations based on occasion, style, and optionally gender.
  */
 export async function getRecommendations(
     occasion: string | null,
-    style: string | null
+    style: string | null,
+    gender?: string | null
 ): Promise<Outfit[]> {
     try {
         const params = new URLSearchParams();
         if (occasion) params.append("occasion", occasion);
         if (style) params.append("style", style);
+        if (gender) params.append("gender", gender);
         params.append("limit", "6");
-
+        
         const response = await fetch(
             `${API_BASE_URL}/clothing/recommendations?${params.toString()}`
         );
@@ -119,88 +90,6 @@ export async function getRecommendations(
         console.error("Error fetching recommendations:", error);
         // Return empty array on error
         return [];
-    }
-}
-
-/**
- * Generate a virtual try-on image.
- */
-export async function generateTryOn(
-    personImage: string,
-    garmentImage: string,
-    sessionId?: string,
-    clothingName?: string,
-    clothingCategory?: string,
-    clothingStyle?: string,
-    genderTarget?: string
-): Promise<TryOnResponse> {
-    try {
-        const response = await fetch(`${API_BASE_URL}/tryon`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                person_image: personImage,
-                garment_image: garmentImage,
-                session_id: sessionId,
-                clothing_name: clothingName,
-                clothing_category: clothingCategory,
-                clothing_style: clothingStyle,
-                gender_target: genderTarget,
-            }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            return {
-                success: false,
-                tryon_result_image: null,
-                error: data.detail || data.error || "Failed to generate try-on",
-                processing_time_ms: null,
-            };
-        }
-
-        return data as TryOnResponse;
-    } catch (error) {
-        console.error("Error generating try-on:", error);
-        return {
-            success: false,
-            tryon_result_image: null,
-            error: error instanceof Error ? error.message : "Network error",
-            processing_time_ms: null,
-        };
-    }
-}
-
-/**
- * Detect the apparent gender of the person in a captured image.
- * Calls POST /api/vision/gender — designed for ultra-low latency (maxOutputTokens: 20).
- * Falls back to "Unisex" on any error so it never blocks the user flow.
- */
-export async function detectGender(
-    base64Image: string
-): Promise<"Male" | "Female" | "Unisex"> {
-    try {
-        const response = await fetch(`${API_BASE_URL}/vision/gender`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ image: base64Image }),
-        });
-
-        if (!response.ok) {
-            console.warn("[Vision] Gender detection failed:", response.status);
-            return "Unisex";
-        }
-
-        const data: GenderDetectResponse = await response.json();
-        return data.detected_gender ?? "Unisex";
-    } catch (error) {
-        console.warn("[Vision] Gender detection error (non-blocking):", error);
-        return "Unisex";
     }
 }
 
@@ -240,6 +129,7 @@ export async function createClothing(clothing: {
     gender: string;
     garment_image: string;
     preview_image: string;
+    garment_description?: string;
     description?: string;
     price?: string;
 }): Promise<Outfit | null> {
@@ -276,6 +166,7 @@ export async function updateClothing(
         gender: string;
         garment_image: string;
         preview_image: string;
+        garment_description: string;
         description: string;
         price: string;
     }>
@@ -313,5 +204,65 @@ export async function deleteClothing(id: string): Promise<boolean> {
     } catch (error) {
         console.error("Error deleting clothing:", error);
         return false;
+    }
+}
+
+/**
+ * Try-on request payload.
+ */
+export interface TryOnRequest {
+    person_image: string;
+    garment_id: string;
+}
+
+/**
+ * Try-on response from the API.
+ */
+export interface TryOnResponse {
+    success: boolean;
+    tryon_result_image: string | null;
+    error: string | null;
+    processing_time_ms: number | null;
+}
+
+/**
+ * Generate a virtual try-on image using ComfyUI orchestration on the backend.
+ */
+export async function generateTryOn(
+    personImage: string,
+    garmentId: string
+): Promise<TryOnResponse> {
+    try {
+        const response = await fetch(`${API_BASE_URL}/try-on`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                person_image: personImage,
+                garment_id: garmentId,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                tryon_result_image: null,
+                error: data.detail || data.error || "Failed to generate try-on",
+                processing_time_ms: null,
+            };
+        }
+
+        return data as TryOnResponse;
+    } catch (error) {
+        console.error("Error generating try-on:", error);
+        return {
+            success: false,
+            tryon_result_image: null,
+            error: error instanceof Error ? error.message : "Network error",
+            processing_time_ms: null,
+        };
     }
 }

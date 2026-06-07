@@ -9,7 +9,7 @@ export function WelcomeScreen() {
 
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center px-8 py-12"
+      className="flex min-h-screen flex-col items-center justify-center px-8 py-12 cursor-pointer"
       onClick={startSession}
       onKeyDown={(e) => e.key === "Enter" && startSession()}
       role="button"
@@ -44,15 +44,15 @@ export function WelcomeScreen() {
         transition={{ duration: 0.8, delay: 0.2 }}
         className="relative z-10 flex flex-col items-center"
       >
-        <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary">
-          <Sparkles className="h-10 w-10 text-primary-foreground" />
+        <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary md:h-24 md:w-24">
+          <Sparkles className="h-10 w-10 text-primary-foreground md:h-12 md:w-12" />
         </div>
 
-        <h1 className="mb-4 text-center font-serif text-5xl font-light tracking-tight text-foreground md:text-6xl lg:text-7xl">
+        <h1 className="mb-4 text-center font-serif text-5xl font-light tracking-tight text-foreground md:text-6xl lg:text-7xl xl:text-8xl">
           <span className="text-balance">StyleMirror</span>
         </h1>
 
-        <p className="mb-12 max-w-md text-center text-lg text-muted-foreground">
+        <p className="mb-12 max-w-md text-center text-lg text-muted-foreground md:text-xl lg:max-w-lg">
           Discover your perfect look with our AI-powered virtual try-on experience
         </p>
       </motion.div>
@@ -70,9 +70,9 @@ export function WelcomeScreen() {
           className="relative"
         >
           <div className="absolute inset-0 rounded-full bg-primary/10 blur-xl" />
-          <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-2 border-primary/20 bg-card shadow-lg">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <span className="text-sm font-medium uppercase tracking-widest">Tap</span>
+          <div className="relative flex h-36 w-36 items-center justify-center rounded-full border-2 border-primary/20 bg-card shadow-lg md:h-40 md:w-40">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary text-primary-foreground md:h-32 md:w-32">
+              <span className="text-sm font-medium uppercase tracking-widest md:text-base">Tap</span>
             </div>
           </div>
         </motion.div>

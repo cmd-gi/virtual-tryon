@@ -1,7 +1,6 @@
 """
 Configuration settings for the backend application.
 """
-import os
 from pathlib import Path
 from pydantic_settings import BaseSettings
 
@@ -17,10 +16,9 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite:///./database/kiosk.db"
     
-    # Google Cloud / Vertex AI
-    GOOGLE_CREDENTIALS_PATH: Path = BASE_DIR / "service-account.json"
-    GOOGLE_PROJECT_ID: str = "vurtual-try-on"
-    GOOGLE_LOCATION: str = "us-central1"
+    # ComfyUI Integration (Vast.ai)
+    COMFYUI_URL: str = "http://127.0.0.1:8188"
+    COMFYUI_TOKEN: str = ""
     
     # API Settings
     API_PREFIX: str = "/api"

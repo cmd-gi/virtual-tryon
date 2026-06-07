@@ -1,4 +1,4 @@
 """Services module."""
-from .tryon_service import TryOnService
+from .comfyui_client import ComfyUIClient, comfyui_client
 
-__all__ = ["TryOnService"]
+__all__ = ["ComfyUIClient", "comfyui_client"]

@@ -3,12 +3,13 @@ FastAPI Backend for Virtual Try-On Kiosk
 Main application entry point.
 """
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 
 from config import settings
-from database import init_db
-from routes import tryon_router, clothing_router, vision_router
+from database import init_db, get_db, ClothingItem
+from routes import clothing_router, tryon_router
 
 
 @asynccontextmanager
@@ -19,7 +20,6 @@ async def lifespan(app: FastAPI):
     init_db()
     print("✅ Database initialized")
     print(f"📁 Storage directory: {settings.STORAGE_DIR}")
-    print(f"🔑 Credentials path: {settings.GOOGLE_CREDENTIALS_PATH}")
     
     yield
     
@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Virtual Try-On Kiosk API",
-    description="Backend API for the AI-powered virtual try-on kiosk application",
+    description="Backend API for the virtual try-on kiosk application",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -44,9 +44,8 @@ app.add_middleware(
 )
 
 # Register routes
-app.include_router(tryon_router, prefix=settings.API_PREFIX)
 app.include_router(clothing_router, prefix=settings.API_PREFIX)
-app.include_router(vision_router, prefix=settings.API_PREFIX)
+app.include_router(tryon_router, prefix=settings.API_PREFIX)
 
 
 @app.get("/")
@@ -68,6 +67,21 @@ async def health():
         "storage": str(settings.STORAGE_DIR),
     }
 
+@app.get("/api/garments/{item_id}/vton-params")
+async def get_garment_vton_params(item_id: str, db: Session = Depends(get_db)):
+    """
+    Get the specific ComfyUI IDM-VTON payload parameters for this garment.
+    Called by the kiosk at runtime to feed parameters directly.
+    """
+    item = db.query(ClothingItem).filter(ClothingItem.id == item_id).first()
+    if not item:
+        raise HTTPException(status_code=404, detail="Garment not found")
+        
+    return {
+        "dino_prompt": item.dino_prompt,
+        "garment_description": item.garment_description
+    }
+
 
 if __name__ == "__main__":
     import uvicorn
@@ -77,3 +91,4 @@ if __name__ == "__main__":
         port=8000,
         reload=True,
     )
+    # trigger reload 2

@@ -21,7 +21,7 @@ class ClothingItem(Base):
     
     id = Column(String(36), primary_key=True, default=generate_uuid)
     name = Column(String(255), nullable=False)
-    category = Column(String(50), nullable=False)  # shirt, pant, jacket, kurta, saree, dress, etc.
+    category = Column(String(50), nullable=False)  # upper_half_sleeve, lower_body, etc.
     occasion = Column(String(50), nullable=False)  # business, casual, party, date
     style = Column(String(50), nullable=False)     # classic, modern, minimalist, bohemian
     gender = Column(String(20), nullable=False)    # male, female, unisex

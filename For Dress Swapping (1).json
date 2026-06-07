@@ -1,0 +1,808 @@
+{
+  "76": {
+    "inputs": {
+      "image": "cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA5L2Rlc2lnbndpdGhtZTA5X3Bob3RvZ3JhcGh5X29mX2VtcHR5X2V4Y2l0ZWRfZmF0X21hbl9jZWxlYnJhdGluZ19jYmZmNjA0Zi1lY2ZkLTQ0ZTctOTY1ZC1mYjY5MTc3NWJlNTkucG5n.webp"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Target Image"
+    }
+  },
+  "81": {
+    "inputs": {
+      "image": "img_00031_.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Clothing Reference Image"
+    }
+  },
+  "99": {
+    "inputs": {
+      "sampler_name": [
+        "146",
+        0
+      ]
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "100": {
+    "inputs": {
+      "steps": [
+        "148",
+        0
+      ],
+      "width": [
+        "115",
+        0
+      ],
+      "height": [
+        "115",
+        1
+      ]
+    },
+    "class_type": "Flux2Scheduler",
+    "_meta": {
+      "title": "Flux2Scheduler"
+    }
+  },
+  "101": {
+    "inputs": {
+      "cfg": [
+        "149",
+        0
+      ],
+      "model": [
+        "170",
+        0
+      ],
+      "positive": [
+        "144",
+        0
+      ],
+      "negative": [
+        "112:173",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFGGuider"
+    }
+  },
+  "102": {
+    "inputs": {
+      "noise": [
+        "104",
+        0
+      ],
+      "guider": [
+        "101",
+        0
+      ],
+      "sampler": [
+        "99",
+        0
+      ],
+      "sigmas": [
+        "100",
+        0
+      ],
+      "latent_image": [
+        "114",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "103": {
+    "inputs": {
+      "samples": [
+        "102",
+        0
+      ],
+      "vae": [
+        "138",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "104": {
+    "inputs": {
+      "noise_seed": [
+        "145",
+        0
+      ]
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "107": {
+    "inputs": {
+      "text": [
+        "189",
+        0
+      ],
+      "clip": [
+        "137",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Pass Prompt"
+    }
+  },
+  "109": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "76",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "ImageScaleToTotalPixels"
+    }
+  },
+  "110": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "81",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "ImageScaleToTotalPixels"
+    }
+  },
+  "113": {
+    "inputs": {
+      "conditioning": [
+        "107",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "ConditioningZeroOut"
+    }
+  },
+  "114": {
+    "inputs": {
+      "width": [
+        "115",
+        0
+      ],
+      "height": [
+        "115",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage",
+    "_meta": {
+      "title": "Empty Flux 2 Latent"
+    }
+  },
+  "115": {
+    "inputs": {
+      "image": [
+        "109",
+        0
+      ]
+    },
+    "class_type": "GetImageSize",
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "117": {
+    "inputs": {
+      "filename": [
+        "154",
+        0
+      ],
+      "path": "",
+      "extension": "jpeg",
+      "lossless_webp": true,
+      "quality_jpeg_or_webp": 100,
+      "optimize_png": false,
+      "embed_workflow": false,
+      "save_workflow_as_json": false,
+      "counter": 0,
+      "time_format": "",
+      "show_preview": true,
+      "images": [
+        "103",
+        0
+      ]
+    },
+    "class_type": "Image Saver Simple",
+    "_meta": {
+      "title": "Image Saver Simple"
+    }
+  },
+  "118": {
+    "inputs": {
+      "clean_file_cache": true,
+      "clean_processes": true,
+      "clean_dlls": false,
+      "retry_times": 1,
+      "anything": [
+        "119",
+        0
+      ]
+    },
+    "class_type": "RAMCleanup",
+    "_meta": {
+      "title": "🎈RAM-Cleanup"
+    }
+  },
+  "119": {
+    "inputs": {
+      "cleanup_mode": false,
+      "anything": [
+        "117",
+        0
+      ]
+    },
+    "class_type": "VRAMCleanup",
+    "_meta": {
+      "title": "VRAM Cleanup"
+    }
+  },
+  "136": {
+    "inputs": {
+      "gguf_name": "FLUX.2/flux-2-klein-9b-Q2_K.gguf"
+    },
+    "class_type": "LoaderGGUF",
+    "_meta": {
+      "title": "GGUF Loader"
+    }
+  },
+  "137": {
+    "inputs": {
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "ClipLoaderGGUF",
+    "_meta": {
+      "title": "GGUF CLIP Loader"
+    }
+  },
+  "138": {
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "class_type": "VaeGGUF",
+    "_meta": {
+      "title": "GGUF VAE Loader"
+    }
+  },
+  "144": {
+    "inputs": {
+      "magnitude": 1,
+      "contrast": 0.05,
+      "normalize_strength": 0.05,
+      "preserve_original": 0.05,
+      "preserve_mode": "linear",
+      "edit_text_weight": 1.25,
+      "active_end_override": 0,
+      "low_vram": true,
+      "device": "auto",
+      "debug": true,
+      "conditioning": [
+        "112:175",
+        0
+      ]
+    },
+    "class_type": "Flux2KleinEnhancer",
+    "_meta": {
+      "title": "FLUX.2 Klein Enhancer"
+    }
+  },
+  "145": {
+    "inputs": {
+      "seed": 358324450331567,
+      "increment": 0
+    },
+    "class_type": "Seed Generator (Image Saver)",
+    "_meta": {
+      "title": "Seed Generator (Image Saver)"
+    }
+  },
+  "146": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "Sampler Selector (Image Saver)",
+    "_meta": {
+      "title": "Sampler Selector (Image Saver)"
+    }
+  },
+  "148": {
+    "inputs": {
+      "value": 10
+    },
+    "class_type": "easy int",
+    "_meta": {
+      "title": "Number of Steps"
+    }
+  },
+  "149": {
+    "inputs": {
+      "value": 1.2
+    },
+    "class_type": "easy float",
+    "_meta": {
+      "title": "CFG Scale"
+    }
+  },
+  "154": {
+    "inputs": {
+      "inputcount": 2,
+      "delimiter": " ",
+      "return_list": false,
+      "Update inputs": null,
+      "string_1": [
+        "165",
+        0
+      ],
+      "string_2": [
+        "164",
+        0
+      ]
+    },
+    "class_type": "JoinStringMulti",
+    "_meta": {
+      "title": "Join String Multi"
+    }
+  },
+  "160": {
+    "inputs": {
+      "value": "Use image 1 as the base person and identity reference.\n\nCompletely remove and replace the original clothing from image 1 before applying the outfit from image 2. No parts of the original outfit should remain visible.\n\nExtract and transfer ONLY the clothing from image 2 onto the person in image 1.\n\nPreserve exact face, hairstyle, body shape, pose, proportions, camera angle, lighting, and background from image 1.\n\nEnsure the clothing from image 2 is accurately mapped onto the body with correct alignment, scale, and perspective. Maintain realistic fabric behavior including folds, stretching, and contact with body joints.\n\nIf the outfit from image 2 includes exposed areas (such as arms, legs, midriff, shoulders, or back), preserve those exposed regions naturally and accurately. Do not add extra fabric, do not cover exposed body parts, and do not modify the outfit design.\n\nMaintain anatomical correctness and natural skin visibility consistent with the outfit style.\n\nDo not modify any part of the person except the clothing. No identity change, no pose change, no background change.\n\nOutput must look like the person in image 1 is naturally wearing the outfit from image 2.\n\nGrament Description:"
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Enter Editing Instructions Prompt Here"
+    }
+  },
+  "161": {
+    "inputs": {
+      "filename_prefix": [
+        "154",
+        0
+      ],
+      "file_format": "txt",
+      "pretty_json": false,
+      "text": [
+        "162:153",
+        0
+      ]
+    },
+    "class_type": "SimpleReadableMetadataSaveTextSG",
+    "_meta": {
+      "title": "Simple Readable Metadata Save Text-SG"
+    }
+  },
+  "164": {
+    "inputs": {
+      "style": "%Y-%m-%d-%H_%M_%S"
+    },
+    "class_type": "Get Date Time String (JPS)",
+    "_meta": {
+      "title": "Get Date Time String (JPS)"
+    }
+  },
+  "165": {
+    "inputs": {
+      "value": "Flux.2_Klein_9B_ClothSwap_"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "File Name Prefix"
+    }
+  },
+  "170": {
+    "inputs": {
+      "lora_name": "FLUX.2_Klein_9B/flux-klein-tryon-comfy.safetensors",
+      "strength_model": 1,
+      "model": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "176": {
+    "inputs": {
+      "rgthree_comparer": {
+        "images": [
+          {
+            "name": "A",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_pbvoj_00005_.png&type=temp&subfolder=&rand=0.8562009685392091"
+          },
+          {
+            "name": "B",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_pbvoj_00006_.png&type=temp&subfolder=&rand=0.15206490059634714"
+          }
+        ]
+      },
+      "image_a": [
+        "103",
+        0
+      ],
+      "image_b": [
+        "76",
+        0
+      ]
+    },
+    "class_type": "Image Comparer (rgthree)",
+    "_meta": {
+      "title": "Image Comparer (rgthree)"
+    }
+  },
+  "185": {
+    "inputs": {
+      "model": "Florence-2-base",
+      "precision": "fp16",
+      "convert_to_safetensors": false
+    },
+    "class_type": "Florence2ModelLoader",
+    "_meta": {
+      "title": "Florence2ModelLoader"
+    }
+  },
+  "186": {
+    "inputs": {
+      "text_input": "",
+      "task": "detailed_caption",
+      "fill_mask": true,
+      "keep_model_loaded": true,
+      "max_new_tokens": 1024,
+      "num_beams": 3,
+      "do_sample": true,
+      "output_mask_select": "",
+      "seed": 739940187887065,
+      "image": [
+        "81",
+        0
+      ],
+      "florence2_model": [
+        "185",
+        0
+      ]
+    },
+    "class_type": "Florence2Run",
+    "_meta": {
+      "title": "Florence2Run"
+    }
+  },
+  "187": {
+    "inputs": {
+      "find1": "a woman wearing ",
+      "replace1": "",
+      "find2": "a man wearing ",
+      "replace2": "",
+      "find3": "her",
+      "replace3": "",
+      "text": [
+        "186",
+        2
+      ]
+    },
+    "class_type": "CR Text Replace",
+    "_meta": {
+      "title": "🔤 CR Text Replace"
+    }
+  },
+  "188": {
+    "inputs": {
+      "preview_markdown": "",
+      "preview_text": "",
+      "previewMode": null,
+      "source": [
+        "187",
+        0
+      ]
+    },
+    "class_type": "PreviewAny",
+    "_meta": {
+      "title": "Preview as Text"
+    }
+  },
+  "189": {
+    "inputs": {
+      "separator": "",
+      "text1": [
+        "160",
+        0
+      ],
+      "text2": [
+        "187",
+        0
+      ]
+    },
+    "class_type": "CR Text Concatenate",
+    "_meta": {
+      "title": "🔤 CR Text Concatenate"
+    }
+  },
+  "190": {
+    "inputs": {
+      "preview_markdown": "",
+      "preview_text": "",
+      "previewMode": null,
+      "source": [
+        "189",
+        0
+      ]
+    },
+    "class_type": "PreviewAny",
+    "_meta": {
+      "title": "Preview as Text"
+    }
+  },
+  "162:151": {
+    "inputs": {
+      "value": "Cloth Swap Prompt -\n------------------- \n"
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Start Instruction"
+    }
+  },
+  "162:155": {
+    "inputs": {
+      "prefix": "",
+      "suffix": "",
+      "input": [
+        "189",
+        0
+      ]
+    },
+    "class_type": "SomethingToString",
+    "_meta": {
+      "title": "Get Prompt"
+    }
+  },
+  "162:152": {
+    "inputs": {
+      "value": "\n"
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Empty New Line"
+    }
+  },
+  "162:159": {
+    "inputs": {
+      "prefix": "Sampler - ",
+      "suffix": "",
+      "input": [
+        "146",
+        0
+      ]
+    },
+    "class_type": "SomethingToString",
+    "_meta": {
+      "title": "Get Sampler Name"
+    }
+  },
+  "162:153": {
+    "inputs": {
+      "inputcount": 10,
+      "delimiter": " ",
+      "return_list": false,
+      "Update inputs": null,
+      "string_1": [
+        "162:151",
+        0
+      ],
+      "string_2": [
+        "162:155",
+        0
+      ],
+      "string_3": [
+        "162:152",
+        0
+      ],
+      "string_4": [
+        "162:156",
+        0
+      ],
+      "string_5": [
+        "162:152",
+        0
+      ],
+      "string_6": [
+        "162:157",
+        0
+      ],
+      "string_7": [
+        "162:152",
+        0
+      ],
+      "string_8": [
+        "162:158",
+        0
+      ],
+      "string_9": [
+        "162:152",
+        0
+      ],
+      "string_10": [
+        "162:159",
+        0
+      ]
+    },
+    "class_type": "JoinStringMulti",
+    "_meta": {
+      "title": "Join String Multi"
+    }
+  },
+  "162:156": {
+    "inputs": {
+      "prefix": "Steps - ",
+      "suffix": "",
+      "input": [
+        "148",
+        0
+      ]
+    },
+    "class_type": "SomethingToString",
+    "_meta": {
+      "title": "Get Number of Steps"
+    }
+  },
+  "162:157": {
+    "inputs": {
+      "prefix": "CFG - ",
+      "suffix": "",
+      "input": [
+        "149",
+        0
+      ]
+    },
+    "class_type": "SomethingToString",
+    "_meta": {
+      "title": "Get CFG Value"
+    }
+  },
+  "162:158": {
+    "inputs": {
+      "prefix": "Seed # -",
+      "suffix": "",
+      "input": [
+        "145",
+        0
+      ]
+    },
+    "class_type": "SomethingToString",
+    "_meta": {
+      "title": "Get Seed Number"
+    }
+  },
+  "111:172": {
+    "inputs": {
+      "conditioning": [
+        "113",
+        0
+      ],
+      "latent": [
+        "111:78",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "ReferenceLatent"
+    }
+  },
+  "111:78": {
+    "inputs": {
+      "pixels": [
+        "109",
+        0
+      ],
+      "vae": [
+        "138",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "111:77": {
+    "inputs": {
+      "conditioning": [
+        "107",
+        0
+      ],
+      "latent": [
+        "111:78",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "ReferenceLatent"
+    }
+  },
+  "112:173": {
+    "inputs": {
+      "conditioning": [
+        "111:172",
+        0
+      ],
+      "latent": [
+        "112:174",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "ReferenceLatent"
+    }
+  },
+  "112:174": {
+    "inputs": {
+      "pixels": [
+        "110",
+        0
+      ],
+      "vae": [
+        "138",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "112:175": {
+    "inputs": {
+      "conditioning": [
+        "111:77",
+        0
+      ],
+      "latent": [
+        "112:174",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "ReferenceLatent"
+    }
+  }
+}

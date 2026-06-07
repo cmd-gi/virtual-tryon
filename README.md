@@ -31,6 +31,23 @@ The **Virtual Try-On Kiosk** is a next-generation smart mirror application desig
 - **Database**: SQLite with SQLAlchemy for reliable data storage.
 - **Storage**: Local file storage for images (configurable).
 
+## 📸 Snapshots
+
+### Landing Page
+![Landing Page](snapshots/1_Landing_Page.png)
+
+### Preferences Selection
+![Preferences Selection](snapshots/2_Preferences_Selection.png)
+
+### Outfit Catalog
+![Outfit Catalog](snapshots/3_Outfit_Catalog.png)
+
+### Final Try-On Result
+![Final Try-On Result](snapshots/4_Final_TryOn_Result.jpeg)
+
+### Admin Panel
+![Admin Panel](snapshots/5_Admin_Panel.png)
+
 ## 🏗️ Tech Stack
 
 ### Frontend

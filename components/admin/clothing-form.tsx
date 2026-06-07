@@ -12,6 +12,7 @@ export interface ClothingFormData {
     gender: string
     garmentImage: string
     previewImage: string
+    garmentDescription: string
     description: string
     price: string
 }
@@ -24,8 +25,11 @@ interface ClothingFormProps {
 }
 
 const categories = [
-    "shirt", "pant", "jacket", "kurta", "saree", "dress",
-    "blouse", "skirt", "suit", "sweater", "t-shirt", "other"
+    "upper_half_sleeve",
+    "upper_full_sleeve",
+    "lower_body",
+    "full_body",
+    "outerwear"
 ]
 
 const occasions = ["business", "casual", "party", "date"]
@@ -35,12 +39,13 @@ const genders = ["male", "female", "unisex"]
 export function ClothingForm({ initialData, onSubmit, onCancel, isSubmitting }: ClothingFormProps) {
     const [formData, setFormData] = useState<ClothingFormData>(initialData || {
         name: "",
-        category: "shirt",
+        category: "upper_half_sleeve",
         occasion: "casual",
         style: "modern",
         gender: "unisex",
         garmentImage: "",
         previewImage: "",
+        garmentDescription: "",
         description: "",
         price: "",
     })
@@ -124,7 +129,9 @@ export function ClothingForm({ initialData, onSubmit, onCancel, isSubmitting }: 
                         className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                     >
                         {categories.map(cat => (
-                            <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                            <option key={cat} value={cat}>
+                                {cat.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -176,17 +183,33 @@ export function ClothingForm({ initialData, onSubmit, onCancel, isSubmitting }: 
             </div>
 
             {/* Description */}
-            <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Description
-                </label>
-                <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                    rows={3}
-                    placeholder="Describe the clothing item..."
-                />
+            <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                        Garment Description (IDM-VTON) *
+                    </label>
+                    <textarea
+                        value={formData.garmentDescription}
+                        onChange={(e) => setFormData(prev => ({ ...prev, garmentDescription: e.target.value }))}
+                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                        rows={3}
+                        placeholder="e.g. A grey hooded sweatshirt with a front pocket"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                        General Description
+                    </label>
+                    <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                        rows={3}
+                        placeholder="Describe the clothing item..."
+                    />
+                </div>
             </div>
 
             {/* Image Uploads */}

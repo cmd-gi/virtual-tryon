@@ -10,6 +10,7 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from database import get_db, ClothingItem
 from schemas import (
@@ -107,7 +108,7 @@ async def list_clothing(
     if style:
         query = query.filter(ClothingItem.style == style)
     if gender:
-        query = query.filter(ClothingItem.gender.in_([gender, "unisex"]))
+        query = query.filter(func.lower(ClothingItem.gender).in_([gender.lower(), "unisex"]))
     if category:
         query = query.filter(ClothingItem.category == category)
     
@@ -123,11 +124,12 @@ async def list_clothing(
 async def get_recommendations(
     occasion: Optional[str] = None,
     style: Optional[str] = None,
+    gender: Optional[str] = None,
     limit: int = 6,
     db: Session = Depends(get_db),
 ) -> ClothingListResponse:
     """
-    Get clothing recommendations based on occasion and style.
+    Get clothing recommendations based on occasion, style, and gender.
     Used by the kiosk to show curated outfits.
     """
     query = db.query(ClothingItem)
@@ -136,28 +138,40 @@ async def get_recommendations(
         query = query.filter(ClothingItem.occasion == occasion)
     if style:
         query = query.filter(ClothingItem.style == style)
+    if gender:
+        query = query.filter(func.lower(ClothingItem.gender).in_([gender.lower(), "unisex"]))
     
     # If no exact matches, get similar items
     items = query.limit(limit).all()
     
     if len(items) < limit:
-        # Fallback: get any items to fill the list
+        # Fallback: get any items to fill the list (deduplicated)
+        existing_ids = {item.id for item in items}
         fallback_query = db.query(ClothingItem)
+        if gender:
+            fallback_query = fallback_query.filter(func.lower(ClothingItem.gender).in_([gender.lower(), "unisex"]))
+
         if occasion:
             fallback_query = fallback_query.filter(ClothingItem.occasion == occasion)
         elif style:
             fallback_query = fallback_query.filter(ClothingItem.style == style)
-        
-        fallback_items = fallback_query.limit(limit - len(items)).all()
-        items.extend(fallback_items)
-    
-    # Still not enough? Get any items
+
+        for fb_item in fallback_query.limit(limit * 2).all():
+            if fb_item.id not in existing_ids and len(items) < limit:
+                items.append(fb_item)
+                existing_ids.add(fb_item.id)
+
+    # Still not enough? Get any items of matched gender (deduplicated)
     if len(items) < limit:
-        more_items = db.query(ClothingItem).limit(limit).all()
         existing_ids = {item.id for item in items}
-        for item in more_items:
-            if item.id not in existing_ids and len(items) < limit:
-                items.append(item)
+        more_query = db.query(ClothingItem)
+        if gender:
+            more_query = more_query.filter(func.lower(ClothingItem.gender).in_([gender.lower(), "unisex"]))
+
+        for more_item in more_query.limit(limit * 2).all():
+            if more_item.id not in existing_ids and len(items) < limit:
+                items.append(more_item)
+                existing_ids.add(more_item.id)
     
     return ClothingListResponse(
         items=[ClothingResponse.model_validate(item) for item in items],
@@ -230,6 +244,10 @@ async def update_clothing(
         _delete_image(item.preview_image)
         update_data["preview_image"] = _save_image(update_data["preview_image"], "preview")
     
+    if "category" in update_data:
+        # Remove dino_prompt from update if accidentally included
+        update_data.pop("dino_prompt", None)
+    
     for key, value in update_data.items():
         setattr(item, key, value)
     
@@ -258,3 +276,4 @@ async def delete_clothing(
     db.commit()
     
     return {"success": True, "message": "Clothing item deleted"}
+

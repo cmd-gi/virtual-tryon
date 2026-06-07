@@ -5,8 +5,6 @@ from .clothing import (
     ClothingUpdate,
     ClothingResponse,
     ClothingListResponse,
-    TryOnRequest,
-    TryOnResponse,
 )
 
 __all__ = [
@@ -15,6 +13,4 @@ __all__ = [
     "ClothingUpdate",
     "ClothingResponse",
     "ClothingListResponse",
-    "TryOnRequest",
-    "TryOnResponse",
 ]

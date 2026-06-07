@@ -44,6 +44,7 @@ export default function AdminPage() {
                 gender: data.gender,
                 garment_image: data.garmentImage,
                 preview_image: data.previewImage,
+                garment_description: data.garmentDescription,
                 description: data.description,
                 price: data.price,
             })
@@ -73,6 +74,7 @@ export default function AdminPage() {
                 occasion: data.occasion,
                 style: data.style,
                 gender: data.gender,
+                garment_description: data.garmentDescription,
                 description: data.description,
                 price: data.price,
             }
@@ -182,7 +184,8 @@ export default function AdminPage() {
                                 style: (editingItem as any).style || "",
                                 gender: (editingItem as any).gender || "unisex",
                                 garmentImage: editingItem.garment_image || "",
-                                previewImage: editingItem.image || "",
+                                previewImage: editingItem.preview_image || editingItem.image || "",
+                                garmentDescription: (editingItem as any).garment_description || "",
                                 description: editingItem.description || "",
                                 price: editingItem.price || "",
                             } : undefined}
