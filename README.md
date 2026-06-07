@@ -1,35 +1,17 @@
-# Virtual Try-On Kiosk Application
+# Virtual Try-On Kiosk
 
-## 📌 Project Overview
-The **Virtual Try-On Kiosk** is a next-generation smart mirror application designed for retail environments. It allows users to virtually try on clothing using advanced AI technology. The application features a touch-first interface optimized for portrait displays, a robust admin panel for inventory management, and a privacy-focused session system.
+## Overview
+Virtual Try-On Kiosk is a portrait-first retail experience built with Next.js and FastAPI. The kiosk guides a user through capture, preference selection, recommendations, and a final try-on preview. An admin portal manages the clothing catalog, while the backend stores garments in SQLite-backed records and orchestrates ComfyUI-based cloth swapping with the selected garment and user photo.
 
-## ✨ Key Features
+## Features
 
-### 🖥️ Frontend (Kiosk Interface)
-- **Touch-Optimized UI**: Designed for vertical (portrait) 4K touchscreens.
-- **Session Management**: Automatic session timeout and data wiping for user privacy.
-- **AI Recommendations**: Suggests clothing based on user preferences (Occasion, Style).
-- **Virtual Try-On**: Real-time visualization of selected garments on the user's photo.
-- **Camera Integration**: Built-in camera capture with countdown and review.
-- **Interactive Flow**:
-  1.  **Welcome Screen**: Attract loop with start button.
-  2.  **Capture**: Take a photo or upload.
-  3.  **Preferences**: Select occasion (Casual, Formal, etc.) and style.
-  4.  **Recommendations**: View AI-curated outfit suggestions.
-  5.  **Try-On**: View the virtual try-on result.
-  6.  **Exit**: Session summary and cleanup.
-
-### 🛠️ Admin Portal
-- **Dashboard**: Overview of system status.
-- **Inventory Management**: Add, edit, and delete clothing items.
-- **Image Upload**: Upload garment images for the try-on model.
-- ** categorization**: Organize items by category, style, and occasion.
-
-### 🚀 Backend
-- **FastAPI**: High-performance Python backend.
-- **AI Integration**: Powered by Google GenAI for recommendations and try-on synthesis.
-- **Database**: SQLite with SQLAlchemy for reliable data storage.
-- **Storage**: Local file storage for images (configurable).
+- Touch-first kiosk flow for portrait displays.
+- Welcome, capture, preferences, recommendations, try-on, and exit screens.
+- Clothing recommendations filtered by occasion, style, gender, and category.
+- Admin portal for creating, editing, and deleting catalog items.
+- Local garment image storage for fast retrieval during try-on generation.
+- ComfyUI-backed try-on pipeline using the selected garment and webcam photo.
+- Session-oriented UX with cleanup designed for public kiosk use.
 
 ## 📸 Snapshots
 
@@ -72,22 +54,22 @@ The **Virtual Try-On Kiosk** is a next-generation smart mirror application desig
 ```
 kiosk-app-build/
 ├── app/                    # Next.js App Router
-│   ├── admin/              # Admin Portal routes
-│   ├── globals.css         # Global styles & Tailwind
+│   ├── admin/              # Admin portal routes
+│   ├── globals.css         # Global styles
 │   ├── layout.tsx          # Root layout
-│   └── page.tsx            # Home/Welcome page
+│   └── page.tsx            # Kiosk entry page
 ├── backend/                # FastAPI Backend
-│   ├── database/           # DB connection & models
-│   ├── routes/             # API endpoints (tryon, clothing)
-│   ├── services/           # Business logic
+│   ├── database/           # DB connection and models
+│   ├── routes/             # API endpoints for clothing and try-on
+│   ├── services/           # ComfyUI client and backend services
 │   ├── storage/            # Image storage
 │   ├── main.py             # App entry point
 │   └── requirements.txt    # Python dependencies
 ├── components/             # React Components
 │   ├── admin/              # Admin-specific components
-│   ├── screens/            # Kiosk flow screens (Welcome, TryOn, etc.)
-│   ├── ui/                 # Reusable UI components (Shadcn)
-│   └── kisk-shell.tsx      # Main wrapper for Kiosk UI
+│   ├── screens/            # Kiosk flow screens
+│   ├── ui/                 # Reusable UI components
+│   └── kiosk-shell.tsx     # Main wrapper for kiosk UI
 ├── lib/                    # Utilities & Context
 │   └── session-context.tsx # Session state management
 └── public/                 # Static assets
@@ -114,6 +96,7 @@ kiosk-app-build/
     pnpm dev
     ```
     The frontend will be available at `http://localhost:3000`.
+    If the backend runs elsewhere, set `NEXT_PUBLIC_API_URL` in a frontend `.env.local` file.
 
 ### 2. Backend Setup
 1.  Navigate to the backend directory:
@@ -133,7 +116,9 @@ kiosk-app-build/
     ```
 5.  Set up environment variables:
     - Create a `.env` file in `backend/`
-    - Add your Google API Key: `GOOGLE_API_KEY=your_api_key_here`
+    - Set `COMFYUI_URL` to your ComfyUI server URL
+    - Set `COMFYUI_TOKEN` if your ComfyUI server requires authorization
+    - Set `DATABASE_URL` only if you want to override the default SQLite path
 6.  Start the backend server:
     ```bash
     python main.py
@@ -142,9 +127,11 @@ kiosk-app-build/
     API Docs: `http://localhost:8000/docs`
 
 ## ⚙️ Configuration
-- **API URL**: Configured in `config.py` or `.env`.
-- **Session Timeout**: Adjustable in `lib/session-context.tsx` (Default: 5 mins).
-- **Kiosk Mode**: The app is designed to run in full-screen mode on touch devices.
+- **Frontend API URL**: `NEXT_PUBLIC_API_URL` controls where the kiosk sends API requests.
+- **Backend API prefix**: `/api` in `backend/config.py`.
+- **ComfyUI connection**: `COMFYUI_URL` and optional `COMFYUI_TOKEN` in `backend/.env`.
+- **Database**: SQLite by default via `backend/config.py`.
+- **Kiosk session behavior**: Managed in `lib/session-context.tsx`.
 
 ## 🤝 Contributing
 1.  Fork the repository.
